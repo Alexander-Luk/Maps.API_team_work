@@ -58,11 +58,11 @@ class Example(QWidget):
 
     def keyPressEvent(self, event):
         print(event.key())
-        if event.key() == 16777239 and self.mstb > 0:
-            self.mstb = float(self.mstb) - 0.01
+        if event.key() == 16777239 and self.mstb - 0.1 > 0:
+            self.mstb = float(self.mstb) - 0.1
             print(self.mstb)
         if event.key() == 16777238:
-            self.mstb = float(self.mstb) + 0.01
+            self.mstb = float(self.mstb) + 0.1
             print(self.mstb)
         ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
