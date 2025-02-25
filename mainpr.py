@@ -2,6 +2,7 @@ import os
 import sys
 
 import requests
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QVBoxLayout
 
@@ -13,10 +14,11 @@ class Example(QWidget):
         super().__init__()
         self.getImage()
         self.initUI()
+        self.mstb = float()
 
     def getImage(self):
-        server_address = 'https://static-maps.yandex.ru/v1?'
-        api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
+        self.server_address = 'https://static-maps.yandex.ru/v1?'
+        self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.first_coord = float(input('Введите первую координату: ')) # 37.530887
         self.second_coord = float(input('Введите вторую координату: ')) # 55.703118
 
@@ -25,7 +27,7 @@ class Example(QWidget):
         ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
         # Готовим запрос.
 
-        map_request = f"{server_address}{ll_spn}&apikey={api_key}"
+        map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
         response = requests.get(map_request)
 
         if not response:
@@ -53,6 +55,30 @@ class Example(QWidget):
     def closeEvent(self, event):
         """При закрытии формы подчищаем за собой"""
         os.remove(self.map_file)
+
+    def keyPressEvent(self, event):
+        print(event.key())
+        if event.key() == 16777239 and self.mstb > 0:
+            self.mstb = float(self.mstb) - 0.01
+            print(self.mstb)
+        if event.key() == 16777238:
+            self.mstb = float(self.mstb) + 0.01
+            print(self.mstb)
+        ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
+        map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
+        response = requests.get(map_request)
+
+        if not response:
+            print("Ошибка выполнения запроса:")
+            print(map_request)
+            print("Http статус:", response.status_code, "(", response.reason, ")")
+            sys.exit(1)
+
+        # Запишем полученное изображение в файл.
+        with open(self.map_file, "wb") as file:
+            file.write(response.content)
+        self.pixmap = QPixmap(self.map_file)
+        self.image.setPixmap(self.pixmap)
 
 
 if __name__ == '__main__':
