@@ -12,19 +12,17 @@ SCREEN_SIZE = [600, 450]
 class Example(QWidget):
     def __init__(self):
         super().__init__()
+        self.mstb = 15
         self.getImage()
         self.initUI()
-        self.mstb = float()
 
     def getImage(self):
         self.server_address = 'https://static-maps.yandex.ru/v1?'
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
-        self.first_coord = float(input('Введите первую координату: ')) # 37.530887
-        self.second_coord = float(input('Введите вторую координату: ')) # 55.703118
+        self.first_coord = float(input('Введите первую координату: '))  # 37.530887
+        self.second_coord = float(input('Введите вторую координату: '))  # 55.703118
 
-        self.mstb = float(input('Введите масштаб(значение, приблеженное к 0.005): '))  # 37.530887
-
-        ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
+        ll_spn = f'll={self.first_coord},{self.second_coord}&spn=0.005,0.005&z={self.mstb}'
         # Готовим запрос.
 
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
@@ -40,6 +38,7 @@ class Example(QWidget):
         self.map_file = "map.png"
         with open(self.map_file, "wb") as file:
             file.write(response.content)
+        print(self.mstb)
 
     def initUI(self):
         self.setGeometry(100, 100, *SCREEN_SIZE)
@@ -57,14 +56,12 @@ class Example(QWidget):
         os.remove(self.map_file)
 
     def keyPressEvent(self, event):
-        print(event.key())
-        if event.key() == 16777239 and self.mstb - 0.1 > 0:
-            self.mstb = float(self.mstb) - 0.1
-            print(self.mstb)
+        print(self.mstb)
+        if event.key() == 16777239:
+            self.mstb += 1
         if event.key() == 16777238:
-            self.mstb = float(self.mstb) + 0.1
-            print(self.mstb)
-        ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
+            self.mstb -= 1
+        ll_spn = f'll={self.first_coord},{self.second_coord}&spn=0.005,0.005&z={self.mstb}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
         response = requests.get(map_request)
 
