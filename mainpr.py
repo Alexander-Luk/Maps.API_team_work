@@ -57,13 +57,20 @@ class Example(QWidget):
         os.remove(self.map_file)
 
     def keyPressEvent(self, event):
-        print(event.key())
         if event.key() == 16777239 and self.mstb > 0:
             self.mstb = float(self.mstb) - 0.01
-            print(self.mstb)
         if event.key() == 16777238:
             self.mstb = float(self.mstb) + 0.01
-            print(self.mstb)
+        if event.key() == Qt.Key.Key_Up:
+            self.second_coord += 0.001
+        elif event.key() == Qt.Key.Key_Down:
+            self.second_coord -= 0.001
+        elif event.key() == Qt.Key.Key_Right:
+            self.first_coord += 0.001
+        elif event.key() == Qt.Key.Key_Left:
+            self.first_coord -= 0.001
+        print(self.second_coord)
+        print(self.first_coord)
         ll_spn = f'll={self.first_coord},{self.second_coord}&spn={self.mstb},{self.mstb}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
         response = requests.get(map_request)
