@@ -18,7 +18,7 @@ class Example(QWidget):
 
     def getImage(self):
         self.server_address = 'https://static-maps.yandex.ru/v1?'
-        self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
+        self.api_key = '1c61eb4c-5ad0-4d78-9b19-b45653666b96'
         self.first_coord = float(input('Введите первую координату: '))  # 37.530887
         self.second_coord = float(input('Введите вторую координату: '))  # 55.703118
 
@@ -57,9 +57,9 @@ class Example(QWidget):
 
     def keyPressEvent(self, event):
         print(self.mstb)
-        if event.key() == 16777239:
+        if event.key() == 16777239 and self.mstb < 21:
             self.mstb += 1
-        if event.key() == 16777238:
+        if event.key() == 16777238 and self.mstb > 0:
             self.mstb -= 1
         ll_spn = f'll={self.first_coord},{self.second_coord}&spn=0.005,0.005&z={self.mstb}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
