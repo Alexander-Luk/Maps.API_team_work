@@ -61,7 +61,7 @@ class Example(QWidget):
             self.mstb += 1
         if event.key() == 16777238 and self.mstb > 0:
             self.mstb -= 1
-        ll_spn = f'll={self.first_coord},{self.second_coord}&spn=0.005,0.005&z={self.mstb}'
+        ll_spn = f'll={self.first_coord},{self.second_coord}&z={self.mstb}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
         response = requests.get(map_request)
 
